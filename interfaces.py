@@ -4,8 +4,13 @@ import attr
 import typing
 
 @attr.s
-class NumericalMetric():
+class NumericalMetricValue():
+    id: str = attr.ib()
     value: float = attr.ib()
+
+@attr.s
+class NumericalMetric():
+    id: str = attr.ib()
     name: str = attr.ib()
     descr: str = attr.ib()
 
