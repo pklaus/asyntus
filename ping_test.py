@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-from interfaces import PassFailTest, PassFailTestResult, NumericalMetricValue
+from interfaces import PassTest, PassTestResult, NumericalMetricValue
 
 # variant using subprocess
-class PingTestSubprocess(PassFailTest):
+class PingTestSubprocess(PassTest):
     max_duration = 59
 
     def __init__(self, host):
         self.host = host
     def run(self):
         import subprocess, re
-        process_result = subprocess.run('ping -c 8 ' + self.host, shell=True, stdout=subprocess.PIPE)
+        process_result = subprocess.run('ping -c 58 ' + self.host, shell=True, stdout=subprocess.PIPE)
         passed = process_result.returncode == 0
         output = process_result.stdout.decode('utf-8')
         total, received = None, None
@@ -25,8 +25,7 @@ class PingTestSubprocess(PassFailTest):
                 regex = r'(\d+) packets transmitted, (\d+) packets received, \d+\.\d+% packet loss'
                 total, received = re.match(regex, line).groups()
             if 'round-trip min/avg/max/stddev = ' in line:
-                # number of packets statistics line
-                print(line)
+                # round trip statistics line
                 regex = r'round-trip min\/avg\/max\/stddev = (\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+) ms'
                 rt_min, rt_avg, rt_max, rt_stddev = re.match(regex, line).groups()
         nm = [
@@ -41,12 +40,13 @@ class PingTestSubprocess(PassFailTest):
           'output': output,
           'return_code': process_result.returncode
         }
-        return PassFailTestResult(passed, numerical_metrics=nm, debug_context=dc)
+        result = PassTestResult(passed, numerical_metrics=nm, debug_context=dc)
+        return result
 
 
 ### variant using pythonping
-class PingTestPythonping(PassFailTest):
-    max_duration = 60
+class PingTestPythonping(PassTest):
+    max_duration = 59
 
     def __init__(self, host):
         self.host = host
@@ -55,9 +55,10 @@ class PingTestPythonping(PassFailTest):
         from io import StringIO
         out = StringIO()
         passed = ping(self.host, verbose=True, out=out)
-        print(repr(passed))
+        #print(repr(passed))
         nm = []
         dc = {'output': out}
-        return PassFailTestResult(passed, numerical_metrics=nm, debug_context=dc)
+        return PassTestResult(passed, numerical_metrics=nm, debug_context=dc)
 
+### the default choice is:
 PingTest = PingTestSubprocess

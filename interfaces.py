@@ -15,7 +15,7 @@ class NumericalMetric():
     descr: str = attr.ib()
 
 @attr.s
-class PassFailTestResult():
+class PassTestResult():
     passed: bool = attr.ib()
     numerical_metrics: typing.List[NumericalMetric] = attr.ib(factory=list)
     #: contextual information (like the output lines used for outcome determination)
@@ -29,6 +29,6 @@ class Test():
         """ Returns TestResult """
 
 @attr.s
-class PassFailTest(Test):
+class PassTest(Test):
     def run(self):
         """ Returns PassFailTestResult """
