@@ -32,3 +32,9 @@ class Test():
 class PassTest(Test):
     def run(self):
         """ Returns PassFailTestResult """
+
+class ResultManager():
+    def __init__(self):
+        pass
+    def new_result(self, result):
+        pass
