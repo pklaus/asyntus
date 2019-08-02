@@ -9,7 +9,7 @@ from interfaces import ResultManager
 
 logging.basicConfig(level='DEBUG')
 
-class LoggingResultManager():
+class LoggingResultManager(ResultManager):
 
     def __init__(self, logger=None, name='resman', level='INFO'):
         self.level = level
@@ -24,7 +24,7 @@ class LoggingResultManager():
         print("hi")
 
 
-class JsonlResultManager():
+class JsonlResultManager(ResultManager):
     def __init__(self, filename='resman.jsonl'):
         import json
         self.filename = filename
